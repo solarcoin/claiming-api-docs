@@ -34,10 +34,6 @@
       "description": "Operations concerning uuids"
     },
     {
-      "name": "Devices",
-      "description": "Operations concerning Devices"
-    },
-    {
       "name": "Integrations",
       "description": "Operations that handle integrations"
     },
@@ -219,115 +215,6 @@
             },
             "schema": {
               "$ref": "#/definitions/UUIDBatchResponse"
-            }
-          }
-        }
-      }
-    },
-    "/devices/{integration}/": {
-      "post": {
-        "tags": [
-          "Devices"
-        ],
-        "summary": "submit real-time claims for an integration",
-        "operationId": "postDevice",
-        "parameters": [
-          {
-            "name": "integration",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ActualClaim"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-            }
-          },
-          "400": {
-            "description": "bad request",
-            "headers": {
-            },
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/devices/{integration}/{deviceID}": {
-      "get": {
-        "tags": [
-          "Devices"
-        ],
-        "summary": "get total claims of an integration for the last period",
-        "operationId": "getDevice",
-        "parameters": [
-          {
-            "name": "integration",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-            },
-            "schema": {
-              "$ref": "#/definitions/ActualClaimsResponse"
-            }
-          }
-        }
-      }
-    },
-    "/devices/smappee/{integration}/{period}": {
-      "get": {
-        "tags": [
-          "Devices"
-        ],
-        "summary": "get total claims for the given period",
-        "operationId": "getSmappeeInfo",
-        "parameters": [
-          {
-            "name": "integration",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "period",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-            },
-            "schema": {
-              "$ref": "#/definitions/ActualClaimsResponse"
             }
           }
         }
