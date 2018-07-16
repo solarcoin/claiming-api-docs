@@ -1,6 +1,20 @@
-.json-property-required {
+.json-property-required, .json-property-optional {
   margin-right: 1rem;
 }
 .json-property-definition {
   padding-left: 6rem;
 }
+#spectacle .json-property-optional:before {
+    display: inline-block;
+    padding: 0.33333rem 0.5rem;
+    border-radius: 0;
+    font-size: 0.8rem;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: default;
+    background: #1779ba;
+    color: #fefefe;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    padding: 3px 6px;
+    content: "optional"; }
