@@ -32,6 +32,9 @@
               <li>
                 <a href="#operation--claim-batch--post">Submit multiple claims</a>
               </li>
+              <li>
+                <a href="#operation--claim--actual">Submit an actual claim reading</a>
+              </li>
             </ul>
           </section>
           <section>
@@ -103,8 +106,10 @@
           <div class="tag-description doc-row">
             <div class="doc-copy">
               <p>This endpoint is used for initial registration of a claim. </p>
-              <p>If the <em>kwhAtClaimingDate</em> property is present in a given project, the claim will be treated as <em>actual</em>, and an initial grant will be issued based on the reading. The SCF will expect subsequent readings at the /claim/actual endpoint (described below) for future grants.</p>
+              <p>The SolarCoin Foundation supports two types of claims for granting: <em>actual</em> and <em>estimated</em>. Actual claims are based on output from inverter or meter readings, estimated claims are based on the nameplate capacity of the facility.</p>
+              <p>If the <em>kwhAtClaimingDate</em> property is present in a given project, the claim will be treated as <em>actual</em>, and an initial grant will be issued based on that property. The SCF will expect subsequent inverter or meter readings at the /claim/actual endpoint (described below) for future grants. The response object will contain a <b>project ID</b> - it is important to retain this, as it will be required to file the future inverter or meter readings for granting.</p>
               </p>If the <em>kwhAtClaimingDate</em> property is missing, the claim will be treated as <em>estimated</em>, and will be granted using our standard estimation of 15% of the installation's nameplate capacity. No further submissions will be necessary.</p>
+              <p>All grants include prior generation, beginning with the <em>installDate</em> or <em>2010-01-01</em>, whichever is later. Both actual and estimated grants will be issued every six months.</p> 
             </div>
           </div>
           <div id="operation--claim--post" class="operation panel" data-traverse-target="operation--claim--post">
@@ -362,6 +367,8 @@
               </div>
             </div>
           </div>
+          
+
           <div id="operation--claim-batch--post" class="operation panel" data-traverse-target="operation--claim-batch--post">
             <!-- <section class="operation-tags row"> -->
             <!-- <div class="doc-copy"> -->
@@ -622,7 +629,185 @@
             </div>
           </div>
 
+<div id="operation--claim--actual" class="operation panel" data-traverse-target="operation--claim--actual">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Claim">Claim Registration</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Submit a reading for an actual claim</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-operation-path">
+                  <span class="operation-method">POST</span>
+                  <span class="operation-path">/claim/actual/</span>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body">
+                  <div class="prop-row prop-group">  
+                    <div class="prop-name">
+                      <div class="prop-title"><span class="json-property-required"></span>projectId</div>  
+                    </div>
+                    <div class="prop-value">
+                      <p>The ID of the project for the power generation reading. This was generated and returned during the initial claim registration at the /claim endpoint.</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name param-label">type</div>
+                    <div class="prop-value">
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
 
+                  <div class="prop-row prop-group">
+                   <div class="prop-name">
+                      <div class="prop-title"><span class="json-property-required"></span>kwh</div>  
+                    </div>
+                    <div class="prop-value">
+                      <p>The power reading (in kwh). This reading should be cumulative.</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name param-label">type</div>
+                    <div class="prop-value">
+                      <span class="json-property-type">number</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+
+                 
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Request Example</h5>
+                  <!-- <div class="hljs"> --><pre><code class="hljs lang-json">
+  {
+    <span class="hljs-attr">&quot;projectId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;kwh&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+  }
+  
+</code></pre>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <span>Array [</span>
+                  <div class="prop-row prop-group">  
+                    <div class="prop-name">
+                      <div class="prop-title"></span>id</div>  
+                    </div>
+                    <div class="prop-value">
+                      <p>The SolarCoin Foundation generated UUID for the project</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name param-label">type</div>
+                    <div class="prop-value">
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+
+                  <div class="prop-row prop-group">
+                   <div class="prop-name">
+                      <div class="prop-title">affiliate</div>  
+                    </div>
+                    <div class="prop-value">
+                      <p>The username of the Affiliate submitting the project</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name param-label">type</div>
+                    <div class="prop-value">
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+
+                  <div class="prop-row prop-group">
+                   <div class="prop-name">
+                      <div class="prop-title">claimant</div>  
+                    </div>
+                    <div class="prop-value">
+                      <p>The submitted Claimant details, identical to the request body</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name param-label">type</div>
+                    <div class="prop-value">
+                      <span class="json-property-type">Array[<a href="index.html#/definitions/Project">Project</a>]</span>
+                      <span class="json-property-range" title="Value limits">Length 1</span>
+                    </div>
+                  </div>
+                <span>]</span>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> --><pre><code class="hljs lang-json">[
+  {
+    <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;affiliate&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;claimant&quot;</span>: {
+      <span class="hljs-attr">&quot;firstName&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;lastName&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;projects&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;address&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;city&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;state&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;zipCode&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;country&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;nameplate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+          <span class="hljs-attr">&quot;kwhAtClaimingDate&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+          <span class="hljs-attr">&quot;installDate&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;walletAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;documentation&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;deviceID&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;legalOwner&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;claimantRelationship&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;ofacCompliant&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>
+        }
+      ],
+      <span class="hljs-attr">&quot;bounty&quot;</span>: {
+        <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;address&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;city&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;state&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;country&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;zipCode&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;info&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;codename&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+        <span class="hljs-attr">&quot;webHook&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+      }
+    }
+  }
+]
+</code></pre>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
 
 
           <h1 id="tag-Existing" class="swagger-summary-tag" data-traverse-target="tag-Existing">Existing Claims</h1>
